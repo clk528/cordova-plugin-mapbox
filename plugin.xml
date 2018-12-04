@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="com.clk528.mapbox" version="1.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmln:android="http://schemas.android.com/apk/res/android">
+	<name>MapBox</name>
+	<js-module name="MapBox" src="www/MapBox.js">
+		<clobbers target="MapBox" />
+	</js-module>
+	<platform name="android">
+		
+		<config-file parent="/*" target="res/xml/config.xml">
+			<feature name="MapBox">
+				<param name="android-package" value="com.clk528.mapbox.MapBox" />
+			</feature>
+		</config-file>
+
+		<config-file parent="/*" target="AndroidManifest.xml">
+			<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    		<uses-permission android:name="android.permission.READ_CONTACTS" />
+    		<uses-permission android:name="android.permission.INTERNET" />
+		    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+		    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+		    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+		    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+		</config-file>
+		
+		<framework src="src/android/File.gradle" custom="true" type="gradleReference" />
+
+		<source-file src="src/android/MapBox.java" target-dir="src/com/clk528/mapbox/MapBox" />
+
+		<source-file src="assets/zoo.db" target-dir="app/src/main/assets" />
+
+	</platform>
+</plugin>
