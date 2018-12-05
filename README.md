@@ -48,10 +48,7 @@ export class HomePage {
 
     start() {
         try {
-            MapBox.start((result) => {//start server
-
-            }, error => alert(error));
-
+            MapBox.start(result => alert(result) , error => alert(error));//start server
         } catch (e) {
             alert(e.message);
         }
@@ -59,9 +56,7 @@ export class HomePage {
 
     stop() {
         try {
-            MapBox.stop((result) => {//stop server
-
-            }, error => alert(error));
+            MapBox.stop(result => alert(result) , error => alert(error));//stop server
         } catch (e) {
             alert(e.message);
         }
@@ -69,10 +64,7 @@ export class HomePage {
 
     test() {
         try {
-            MapBox.test((result) => {//test
-                alert(result)
-            }, error => alert(error));
-
+            MapBox.test(result => alert(result) , error => alert(error));//test
         } catch (e) {
             alert(e.message);
         }
@@ -80,12 +72,10 @@ export class HomePage {
 
     getMetaData() {
         try {
-
             MapBox.getMetaData((result) => {
                 result = JSON.parse(result);
                 console.log(result);
             }, error => alert(error));
-
         } catch (e) {
             alert(e.message);
         }
