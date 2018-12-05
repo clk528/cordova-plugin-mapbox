@@ -26,7 +26,16 @@
 
 		<source-file src="src/android/MapBox.java" target-dir="src/com/clk528/mapbox/MapBox" />
 
+		<!-- sqlite file -->
 		<source-file src="assets/zoo.db" target-dir="app/src/main/assets" />
+
+		<!-- png file -->
+		<source-file src="assets/img/icons_pl.png" target-dir="app/src/main/assets/img" />
+		<source-file src="assets/img/icons_pl@2x.png" target-dir="app/src/main/assets/img" />
+
+		<!-- png json file -->
+		<source-file src="assets/img/icons_pl.json" target-dir="app/src/main/assets/img" />
+		<source-file src="assets/img/icons_pl@2x.json" target-dir="app/src/main/assets/img" />
 
 	</platform>
 </plugin>

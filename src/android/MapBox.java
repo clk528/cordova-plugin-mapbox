@@ -4,7 +4,6 @@ package com.clk528.mapbox;
  * @author clk528@qq.com
  * @Date 2018年12月4日 20:48:08
  * 为mapbox 提供离线资源支持
- *
  */
 import android.util.Log;
 import android.database.Cursor;
@@ -12,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.app.AlertDialog;
 
 import com.koushikdutta.async.http.Multimap;
+import com.koushikdutta.async.http.Headers;
 import com.koushikdutta.async.http.server.AsyncHttpServer;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
@@ -77,14 +77,16 @@ public class MapBox extends CordovaPlugin {
 
     private void start(CallbackContext callbackContext){
         if (httpServer != null && httpServer instanceof AsyncHttpServer) {
-            this.Alert("server 已经启动");
-            callbackContext.error("server 已经启动");
+            callbackContext.error("Server has started");
         } else {
             httpServer = new AsyncHttpServer();
 
             httpServer.get("/", new HttpServerRequestCallback() {
                 @Override
                 public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                    Headers headers = response.getHeaders();
+                    headers.set("Access-Control-Allow-Origin", "*"); 
+                    headers.set("auth", "clk");
                     response.send("{\"name\":\"chenlongke\"}");
                 }
             });
@@ -96,6 +98,12 @@ public class MapBox extends CordovaPlugin {
                     SQLiteDatabase sql = null;
                     Cursor cursor = null;
 
+                    Headers headers = response.getHeaders();
+
+                    headers.set("Access-Control-Allow-Origin", "*");
+                    headers.set("auth", "clk");
+                    headers.set("Content-Encoding", "gzip");
+                    
                     try {
                         Log.i("DBManger", "request path:" + request.getPath());
 
@@ -164,9 +172,78 @@ public class MapBox extends CordovaPlugin {
                 }
             });
 
-            httpServer.listen(3000);
-            this.Alert("start server");
+            httpServer.get("/img/icons_pl.png", new HttpServerRequestCallback() {
+                @Override
+                public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                    Headers headers = response.getHeaders();
+                    headers.set("Access-Control-Allow-Origin", "*");
+                    try {
+                        InputStream is = cordova.getActivity().getAssets().open("img/icons_pl.png");
+                        response.setContentType("image/png");
+                        response.sendStream(is, is.available());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i("DBManger", "读取图片发生了了错误:" + e.getMessage());
+                        response.code(404);
+                        response.end();
+                    }
+                }
+            });
+            httpServer.get("/img/icons_pl.json", new HttpServerRequestCallback() {
+                @Override
+                public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                    Headers headers = response.getHeaders();
+                    headers.set("Access-Control-Allow-Origin", "*");
+                    try {
+                        InputStream is = cordova.getActivity().getAssets().open("img/icons_pl.json");
+                        response.setContentType("application/json");
+                        response.sendStream(is, is.available());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i("DBManger", "读取icons_pl.json发生了了错误:" + e.getMessage());
+                        response.code(404);
+                        response.end();
+                    }
+                }
+            });
 
+            httpServer.get("/img/icons_pl@2x.png", new HttpServerRequestCallback() {
+                @Override
+                public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                    Headers headers = response.getHeaders();
+                    headers.set("Access-Control-Allow-Origin", "*");
+                    try {
+                        InputStream is = cordova.getActivity().getAssets().open("img/icons_pl@2x.png");
+                        response.setContentType("image/png");
+                        response.sendStream(is, is.available());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i("DBManger", "读取图片发生了了错误:" + e.getMessage());
+                        response.code(404);
+                        response.end();
+                    }
+                }
+            });
+            
+            httpServer.get("/img/icons_pl@2x.json", new HttpServerRequestCallback() {
+                @Override
+                public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                    Headers headers = response.getHeaders();
+                    headers.set("Access-Control-Allow-Origin", "*");
+                    try {
+                        InputStream is = cordova.getActivity().getAssets().open("img/icons_pl@2x.json");
+                        response.setContentType("application/json");
+                        response.sendStream(is, is.available());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i("DBManger", "读取icons_pl.json发生了了错误:" + e.getMessage());
+                        response.code(404);
+                        response.end();
+                    }
+                }
+            });
+
+            httpServer.listen(3000);
             callbackContext.success("success");
         }
     }
@@ -174,11 +251,9 @@ public class MapBox extends CordovaPlugin {
     private void stop(CallbackContext callbackContext){
         if (httpServer != null && httpServer instanceof AsyncHttpServer) {
             httpServer.stop();
-            httpServer = null;
-            this.Alert("stop server");
-        } else {
-            this.Alert("server 未启动");
-            callbackContext.error("server 未启动");
+            httpServer = null;                
+        } else {     
+            callbackContext.error("Server not started");
         }
         callbackContext.success("success");
     }
@@ -217,7 +292,7 @@ public class MapBox extends CordovaPlugin {
     private void Alert(String info){
         new AlertDialog.Builder(cordova.getContext())
                 .setMessage(info)
-                .setPositiveButton("确定", null).show();
+                .setPositiveButton("OK", null).show();
     }
 
     private void init() {
