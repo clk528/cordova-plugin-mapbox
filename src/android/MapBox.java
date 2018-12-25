@@ -77,7 +77,7 @@ public class MapBox extends CordovaPlugin {
 
     private void start(CallbackContext callbackContext){
         if (httpServer != null && httpServer instanceof AsyncHttpServer) {
-            callbackContext.error("Server has started");
+            callbackContext.success("success");
         } else {
             httpServer = new AsyncHttpServer();
 
